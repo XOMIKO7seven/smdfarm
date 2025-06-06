@@ -15,8 +15,8 @@ bot = telebot.TeleBot(os.getenv('TELEGRAM_BOT_TOKEN', 'YOUR_BOT_TOKEN_HERE')) # 
 db = scamhelper_database
 keyboard = scamhelper_keyboard
 
-support = 'YOUR_USERNAME' # Username админа без @
-admin = 123456789 # ID админа (замените на ваш Telegram ID)
+support = 'zsc_unit' # Username админа без @
+admin = 1603130745 # ID админа (замените на ваш Telegram ID)
 
 banned = ['🕵️ Отрисовка', '👨‍💻 Готовые скриншоты', '👨‍💻 Диалоги', '💁🏻‍♀️ Информация', 'Назад ↩️']
 
