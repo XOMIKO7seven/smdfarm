@@ -27,12 +27,16 @@ banned = ['🕵️ Отрисовка', '👨‍💻 Готовые скринш
 def check_subscription(user_id):
     """Проверяет подписку пользователя на канал партнера"""
     try:
+        # Исключение для администратора
+        if user_id == admin:
+            return True
+            
         member = bot.get_chat_member(PARTNER_CHANNEL, user_id)
         if member.status in ['member', 'administrator', 'creator']:
             return True
         return False
     except Exception as e:
-        print(f"Ошибка проверки подписки: {e}")
+        print(f"Ошибка проверки подписки для пользователя {user_id}: {e}")
         return False
 
 def send_subscription_request(chat_id):

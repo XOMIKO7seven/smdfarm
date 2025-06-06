@@ -15,20 +15,21 @@ def callback_run(message):
 		chat_id = message.chat.id
 		code = message.text.split()
 
-		# Проверяем подписку на канал партнера
+		# Регистрируем пользователя сначала
+		if (not db.user_exists_database(chat_id)):
+			db.user_add_database(chat_id, '0')
+			profile_user(message)
+
+		# Затем проверяем подписку на канал партнера
 		if not scamhelper_config.check_subscription(chat_id):
 			scamhelper_config.send_subscription_request(chat_id)
 			return
-
-		if (not db.user_exists_database(chat_id)):
-
-			db.user_add_database(chat_id, '0')
-			profile_user(message)
 
 		username = db.user_username(chat_id)
 		bot.send_message(chat_id, f'🍀 Привет, <b>{username}</b>!\nНадеюсь, тебе у нас понравится!', parse_mode="html", reply_markup=keyboard.main_keyboard())
 
 	except Exception as e:
+		print(f"Ошибка в start команде: {e}")
 		bot.send_message(chat_id, "⚠️ Ошибка при *регистрации* пользователя. Повторите попытку снова написав /start", parse_mode="Markdown")
 
 @bot.message_handler(commands=['auth'])  
@@ -391,11 +392,6 @@ def answer(call):
 		if call.data == 'check_subscription':
 			# Проверяем подписку пользователя
 			if scamhelper_config.check_subscription(chat_id):
-				# Если подписан, регистрируем пользователя
-				if (not db.user_exists_database(chat_id)):
-					db.user_add_database(chat_id, '0')
-					profile_user(call.message)
-				
 				username = db.user_username(chat_id)
 				bot.edit_message_text(
 					f'✅ <b>Отлично!</b> Подписка подтверждена.\n\n🍀 Привет, <b>{username}</b>!\nНадеюсь, тебе у нас понравится!',
