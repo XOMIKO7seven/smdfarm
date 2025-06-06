@@ -15,7 +15,7 @@ run = ["python3", "main.py"]
 deploymentTarget = "cloudrun"
 
 [workflows]
-runButton = "Keep Bot Running"
+runButton = "Run"
 
 [[workflows.workflow]]
 name = "Initialize Database"
@@ -43,12 +43,3 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python3 scamhelper.py"
-
-[[workflows.workflow]]
-name = "Keep Bot Running"
-author = 43558308
-mode = "sequential"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "python run_bot.py"
