@@ -18,7 +18,46 @@ keyboard = scamhelper_keyboard
 support = 'zsc_unit' # Username админа без @
 admin = 1603130745 # ID админа (замените на ваш Telegram ID)
 
+# Канал для принудительной подписки
+PARTNER_CHANNEL = '@blackrynoknews'  # Канал партнера
+PARTNER_CHANNEL_LINK = 'https://t.me/blackrynoknews'  # Ссылка на канал
+
 banned = ['🕵️ Отрисовка', '👨‍💻 Готовые скриншоты', '👨‍💻 Диалоги', '💁🏻‍♀️ Информация', 'Назад ↩️']
+
+def check_subscription(user_id):
+    """Проверяет подписку пользователя на канал партнера"""
+    try:
+        member = bot.get_chat_member(PARTNER_CHANNEL, user_id)
+        if member.status in ['member', 'administrator', 'creator']:
+            return True
+        return False
+    except Exception as e:
+        print(f"Ошибка проверки подписки: {e}")
+        return False
+
+def send_subscription_request(chat_id):
+    """Отправляет сообщение с просьбой подписаться на канал"""
+    try:
+        inline_keyboard = types.InlineKeyboardMarkup(row_width=1)
+        subscribe_btn = types.InlineKeyboardButton(
+            text="📢 Подписаться на канал", 
+            url=PARTNER_CHANNEL_LINK
+        )
+        check_btn = types.InlineKeyboardButton(
+            text="✅ Проверить подписку", 
+            callback_data='check_subscription'
+        )
+        inline_keyboard.add(subscribe_btn, check_btn)
+        
+        bot.send_message(
+            chat_id, 
+            "🔒 <b>Для использования бота необходимо подписаться на наш партнерский канал!</b>\n\n"
+            "📢 Подпишитесь на канал и нажмите кнопку 'Проверить подписку'",
+            parse_mode='html',
+            reply_markup=inline_keyboard
+        )
+    except Exception as e:
+        print(f"Ошибка отправки запроса подписки: {e}")
 
 
 # Регистрация

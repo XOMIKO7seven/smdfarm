@@ -15,6 +15,11 @@ def callback_run(message):
 		chat_id = message.chat.id
 		code = message.text.split()
 
+		# Проверяем подписку на канал партнера
+		if not scamhelper_config.check_subscription(chat_id):
+			scamhelper_config.send_subscription_request(chat_id)
+			return
+
 		if (not db.user_exists_database(chat_id)):
 
 			db.user_add_database(chat_id, '0')
@@ -46,6 +51,12 @@ def callback_auth(message):
 @bot.message_handler(content_types=['text'])
 def callback_messages(message):
 	chat_id = message.chat.id
+	
+	# Проверяем подписку на канал партнера перед обработкой сообщений
+	if not scamhelper_config.check_subscription(chat_id):
+		scamhelper_config.send_subscription_request(chat_id)
+		return
+	
 	access = db.user_warning(chat_id)
 
 	if (access is not None):
@@ -377,7 +388,26 @@ def answer(call):
 	try:
 		chat_id = call.message.chat.id
 
-		if call.data == 'SEND_ALL_AD' and chat_id == admin:
+		if call.data == 'check_subscription':
+			# Проверяем подписку пользователя
+			if scamhelper_config.check_subscription(chat_id):
+				# Если подписан, регистрируем пользователя
+				if (not db.user_exists_database(chat_id)):
+					db.user_add_database(chat_id, '0')
+					profile_user(call.message)
+				
+				username = db.user_username(chat_id)
+				bot.edit_message_text(
+					f'✅ <b>Отлично!</b> Подписка подтверждена.\n\n🍀 Привет, <b>{username}</b>!\nНадеюсь, тебе у нас понравится!',
+					chat_id=chat_id,
+					message_id=call.message.message_id,
+					parse_mode="html",
+					reply_markup=None
+				)
+				bot.send_message(chat_id, "🎉 <b>Добро пожаловать!</b> Теперь вы можете пользоваться всеми функциями бота.", parse_mode="html", reply_markup=keyboard.main_keyboard())
+			else:
+				bot.answer_callback_query(call.id, "❌ Подписка не найдена! Пожалуйста, подпишитесь на канал.", show_alert=True)
+		elif call.data == 'SEND_ALL_AD' and chat_id == admin:
 			message = bot.send_message(chat_id, 'Введите рекламное сообщение\nЕсли Вы хотите прикрепить фото разделите сообщение и ссылку на фото знаком (imgur) ;', parse_mode='html')
 			bot.register_next_step_handler(message, send_all_ad)
 		elif call.data == 'ADD_ALL_AD' and chat_id == admin:
