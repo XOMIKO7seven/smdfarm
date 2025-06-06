@@ -15,8 +15,8 @@ bot = telebot.TeleBot('Token') # Сюда токен вашего бота!
 db = scamhelper_database
 keyboard = scamhelper_keyboard
 
-support = 'UserName' # Username админа без @
-admin = 'ID' # ID админа 
+support = 'YOUR_USERNAME' # Username админа без @
+admin = 123456789 # ID админа (замените на ваш Telegram ID)
 
 banned = ['🕵️ Отрисовка', '👨‍💻 Готовые скриншоты', '👨‍💻 Диалоги', '💁🏻‍♀️ Информация', 'Назад ↩️']
 
@@ -1155,4 +1155,3 @@ def add_warning(message):
 
     except:
     	pass
-

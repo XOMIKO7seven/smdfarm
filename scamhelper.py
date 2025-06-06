@@ -394,5 +394,5 @@ def answer(call):
 	except:
 		pass
 
-
-bot.polling(none_stop = True, interval = 0)		
+if __name__ == '__main__':
+	bot.polling(none_stop = True, interval = 0)
