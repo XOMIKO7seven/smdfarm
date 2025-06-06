@@ -3,14 +3,14 @@ from telebot import types
 from telebot.types import InputMediaPhoto
 
 import threading, scamhelper_keyboard, scamhelper_database, random, textwrap, requests
+import os
+import datetime
+from time import sleep
 
 from PIL import Image, ImageFont, ImageDraw
 
-from time import sleep
-
-import datetime
-
-bot = telebot.TeleBot('Token') # Сюда токен вашего бота!
+import os
+bot = telebot.TeleBot(os.getenv('TELEGRAM_BOT_TOKEN', 'YOUR_BOT_TOKEN_HERE')) # Токен из переменной окружения
 
 db = scamhelper_database
 keyboard = scamhelper_keyboard
