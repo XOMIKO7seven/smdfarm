@@ -1,4 +1,4 @@
-entrypoint = "main.py"
+entrypoint = "scamhelper.py"
 modules = ["python-3.11"]
 
 [nix]
@@ -15,7 +15,7 @@ run = ["python3", "main.py"]
 deploymentTarget = "cloudrun"
 
 [workflows]
-runButton = "Run Bot"
+runButton = "Run"
 
 [[workflows.workflow]]
 name = "Initialize Database"
@@ -34,3 +34,12 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python main.py"
+
+[[workflows.workflow]]
+name = "Run"
+author = 43558308
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python3 scamhelper.py"
